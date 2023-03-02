@@ -93,8 +93,10 @@ namespace AntMe.Player.modified
         /// <param name="fruit">spotted fruit</param>
         public override void Spots(Fruit fruit)
         {
+            MakeMark(2);
             if (CurrentLoad == 0 && NeedsCarrier(fruit))
             {
+                Think("take fruit!");
                 DestinationReached(fruit);
             }
         }
@@ -107,8 +109,10 @@ namespace AntMe.Player.modified
         /// <param name="sugar">spotted sugar</param>
         public override void Spots(Sugar sugar)
         {
+            MakeMark(2);
             if (CurrentLoad == 0)
             {
+                Think("take sugar!");
                 DestinationReached(sugar);
             }
         }
@@ -207,7 +211,7 @@ namespace AntMe.Player.modified
         /// <param name="bug">spotted bug</param>
         public override void SpotsEnemy(Bug bug)
         {
-            Drop();
+            Think("Attack!");
             if (FriendlyAntsInViewrange >= 2)
             {
                 Attack(bug);
@@ -226,6 +230,13 @@ namespace AntMe.Player.modified
         /// <param name="ant">attacking ant</param>
         public override void UnderAttack(Ant ant)
         {
+            if (CurrentEnergy < MaximumEnergy / 2)
+            {
+                TurnAround();
+                GoAwayFrom(ant);
+                GoToAnthill();
+            }
+
         }
 
         /// <summary>
@@ -238,10 +249,7 @@ namespace AntMe.Player.modified
         {
             if (CurrentEnergy < MaximumEnergy / 2)
             {
-                GoToAnthill();
-            }
-            else
-            {
+                TurnAround();
                 GoAwayFrom(bug);
             }
         }
